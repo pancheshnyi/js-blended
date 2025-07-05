@@ -276,6 +276,45 @@
 // якщо функція отримує масив - поверніть з функції найменше число,
 // в іншому випадку - поверніть 'Sory, it is not an array!'.
 
+// -------------------- 1 варіант ---------------------------------
+
+// const numbers = [2, 5, 35, 56, 12, 1, 7, 80, 3];
+
+// function findSmallestNumber(numbers) {
+//   if (!Array.isArray(numbers)) {
+//     return "Sory, it is not an array!";
+//   }
+
+//   const newArr = numbers.toSorted((a, b) => a - b);
+//   return newArr[0];
+// }
+
+// console.log(findSmallestNumber(numbers));
+
+// -------------------- 2 варіант ---------------------------------
+
+// const numbers = [2, 5, 35, 56, 12, 1, 7, 80, 3];
+
+// function findSmallestNumber(numbers) {
+//   if (!Array.isArray(numbers)) {
+//     return "Sory, it is not an array!";
+//   }
+
+//   let smallesNunber = numbers[0];
+
+//   for (const number of numbers) {
+//     if (smallesNunber > number) {
+//       smallesNunber = number;
+//     }
+//   }
+
+//   return smallesNunber;
+// }
+
+// console.log(findSmallestNumber(numbers));
+
+// -------------------- 3 варіант ---------------------------------
+
 const numbers = [2, 5, 35, 56, 12, 1, 7, 80, 3];
 
 function findSmallestNumber(numbers) {
@@ -283,11 +322,10 @@ function findSmallestNumber(numbers) {
     return "Sory, it is not an array!";
   }
 
-  const newArr = numbers.toSorted((a, b) => a - b);
-  return newArr[0];
+  return Math.min(...numbers); //використовуєм спред оператор, "виклик функції"
 }
 
-console.log(findSmallestNumber(numbers));
+console.log(findSmallestNumber(numbers)); // 1
 
 // --------------------------------------------------- ЗАВДАННЯ 6 ------------------------------------------------------------
 
@@ -296,7 +334,61 @@ console.log(findSmallestNumber(numbers));
 // пробілами (параметр string), і повертатиме найдовше слово у реченні.
 
 // Скористайтесь цим прикладом виклику функції для перевірки її роботи:
+
+// -------------------- 1 варіант ---------------------------------
+
+function findLongestWord(string) {
+  // 1. Розбиваємо речення на окремі слова
+  const words = string.split(" ");
+  console.log(words);
+
+  // 2. Припускаємо, що перше слово — найдовше
+  let longest = words[0];
+
+  // 3. Перебираємо всі слова
+  for (const word of words) {
+    if (word.length > longest.length) {
+      longest = word; // якщо це слово довше — зберігаємо його
+    }
+  }
+
+  // 4. Повертаємо найдовше слово
+  return longest;
+}
+
+console.log(findLongestWord("London is the capital of Great Britain")); // 'capital'
+
+// -------------------- 2 варіант ---------------------------------
+
+// function findLongestWord(string) {
+//   return string
+//     .split(" ")
+//     .reduce((longest, current) =>
+//       current.length > longest.length ? current : longest
+//     );
+// }
+
+// longest — найкраще слово наразі current — поточне слово, яке зараз розглядаємо
+// longest — акумулятор (те, що накопичується, зберігається) якщо не передали йому початкове значення,
+// то він візьме його з першогого елементу масиву
+// .reduce((найдовше, зараз) => зараз.length > найдовше.length ? зараз : найдовше)
+
 // console.log(findLongestWord("London is the capital of Great Britain")); // 'capital'
+
+// -------------------- 3 варіант ---------------------------------
+
+// function findLongestWord(string) {
+//   const words = string.split(" ");
+//   let index = 0;
+
+//   for (let i = 1; i < words.length; i++) {
+//     if (words[i].length > words[index].length) {
+//       index = i;
+//     }
+//   }
+
+//   return words[index];
+// }
 
 // --------------------------------------------------- ЗАВДАННЯ 7 ------------------------------------------------------------
 
@@ -338,6 +430,35 @@ console.log(findSmallestNumber(numbers));
 // Якщо вказані властивості в обʼєкті відсутні (тобто метод exist повертає false),
 // методи sum і mult мають повертати рядок 'No such propeties'
 
+const calculator = {
+  read(a, b) {
+    // this посилання на обєкт, приймає два аргумента і зберігає їх як властивості об'єкта
+    // в методах обєкта до властивостей обєкта ми звертаємось через this
+    this.a = a;
+    this.b = b;
+  },
+
+  exist() {
+    return this.a !== undefined && this.b !== undefined; // коли властивість відсутня в обєкті буде undefined
+  },
+
+  sum() {
+    if (this.exist()) {
+      return this.a + this.b;
+    } else {
+      return "No such propeties";
+    }
+  },
+
+  mult() {
+    if (this.exist()) {
+      return this.a * this.b;
+    } else {
+      return "No such propeties";
+    }
+  },
+};
+
 // --------------------------------------------------- ЗАВДАННЯ 10 ------------------------------------------------------------
 
 // Напишіть функцію calcTotalPrice(fruits, fruitName),
@@ -348,11 +469,53 @@ console.log(findSmallestNumber(numbers));
 // Зверніть увагу, що в масиві може бути кілька обʼєктів з однаковою
 // назвою фрукта, це також треба урахувати.
 
-// const fruits = [
-//     { name: "Яблуко", price: 45, quantity: 7 },
-//     { name: "Апельсин", price: 60, quantity: 4 },
-//     { name: "Банан", price: 125, quantity: 8 },
-//     { name: "Груша", price: 350, quantity: 2 },
-//     { name: "Виноград", price: 440, quantity: 3 },
-//     { name: "Банан", price: 125, quantity: 3 },
-//   ];
+const fruits = [
+  { name: "Яблуко", price: 45, quantity: 7 },
+  { name: "Апельсин", price: 60, quantity: 4 },
+  { name: "Банан", price: 125, quantity: 8 },
+  { name: "Груша", price: 350, quantity: 2 },
+  { name: "Виноград", price: 440, quantity: 3 },
+  { name: "Банан", price: 125, quantity: 3 },
+];
+
+function calcTotalPrice(fruits, fruitName) {}
+
+console.log(calcTotalPrice(fruits, "Банан"));
+
+// ---------------------------------------------- МЕТОД reduce() -------------------------------------------------------
+
+// ------------------------ Знайти найбільше число -----------------------------
+
+// const numbers = [5, 9, 12, 4, 25, 1];
+// const max = numbers.reduce((acum, item) => (item < acum ? item : acum));
+
+// console.log(max);
+
+// ------------- Порахувати загальну довжину всіх слів у реченні ---------------
+
+// const sentence = "Я люблю шоколад і банани да";
+// const totalLength = sentence
+//   .split(" ")
+//   .reduce((acum, item) => acum + item.length, 0);
+
+// console.log(totalLength);
+
+// --------------------- Зібрати масив об'єктів у один об'єкт -------------------
+
+const users = [
+  { name: "Oleg", age: 25 },
+  { name: "Anna", age: 30 },
+  { name: "Ivan", age: 20 },
+];
+
+// const result = users.reduce((acc, user) => {
+//   acc[user.name] = user.age;
+//   return acc;
+// }, {});
+
+const newArr = users.reduce((acc, item) => {
+  acc[user.name] = user.age;
+  return acc;
+}, {});
+
+console.log(result);
